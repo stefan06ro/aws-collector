@@ -12,9 +12,6 @@ RUN apk add --no-cache ca-certificates
 RUN mkdir -p /opt/aws-collector
 ADD ./aws-collector /opt/aws-collector/aws-collector
 
-RUN mkdir -p /opt/ignition
-COPY --from=builder /opt/k8scloudconfig /opt/ignition
-
 WORKDIR /opt/aws-collector
 
 EXPOSE 8000
