@@ -9,12 +9,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/giantswarm/aws-operator/service/controller/key"
+	"github.com/giantswarm/aws-collector/service/controller/key"
 )
 
 const (
 	// AWSOperatorArnKey is the key in the Secret under which the ARN for the
-	// aws-operator role is held.
+	// aws-collector role is held.
 	AWSOperatorArnKey = "aws.awsoperator.arn"
 )
 

@@ -3,7 +3,7 @@ package flag
 import (
 	"github.com/giantswarm/microkit/flag"
 
-	"github.com/giantswarm/aws-operator/flag/service"
+	"github.com/giantswarm/aws-collector/flag/service"
 )
 
 type Flag struct {

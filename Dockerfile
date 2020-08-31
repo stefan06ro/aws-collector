@@ -9,13 +9,13 @@ FROM alpine:3.12
 
 RUN apk add --no-cache ca-certificates
 
-RUN mkdir -p /opt/aws-operator
-ADD ./aws-operator /opt/aws-operator/aws-operator
+RUN mkdir -p /opt/aws-collector
+ADD ./aws-collector /opt/aws-collector/aws-collector
 
 RUN mkdir -p /opt/ignition
 COPY --from=builder /opt/k8scloudconfig /opt/ignition
 
-WORKDIR /opt/aws-operator
+WORKDIR /opt/aws-collector
 
 EXPOSE 8000
-ENTRYPOINT ["/opt/aws-operator/aws-operator"]
+ENTRYPOINT ["/opt/aws-collector/aws-collector"]

@@ -1,7 +1,7 @@
 package provider
 
 import (
-	"github.com/giantswarm/aws-operator/flag/service/installation/guest/kubernetes/api/auth/provider/oidc"
+	"github.com/giantswarm/aws-collector/flag/service/installation/guest/kubernetes/api/auth/provider/oidc"
 )
 
 type Provider struct {

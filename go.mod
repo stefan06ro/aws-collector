@@ -1,4 +1,4 @@
-module github.com/giantswarm/aws-operator
+module github.com/giantswarm/aws-collector
 
 go 1.14
 

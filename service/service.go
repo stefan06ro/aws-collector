@@ -4,34 +4,23 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"net"
-	"strings"
 	"sync"
 
 	infrastructurev1alpha2 "github.com/giantswarm/apiextensions/v2/pkg/apis/infrastructure/v1alpha2"
 	releasev1alpha1 "github.com/giantswarm/apiextensions/v2/pkg/apis/release/v1alpha1"
-	"github.com/giantswarm/certs/v3/pkg/certs"
 	"github.com/giantswarm/k8sclient/v4/pkg/k8sclient"
 	"github.com/giantswarm/k8sclient/v4/pkg/k8srestconfig"
 	"github.com/giantswarm/microendpoint/service/version"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
-	"github.com/giantswarm/randomkeys/v2"
 	"github.com/spf13/viper"
 	"k8s.io/client-go/rest"
 	apiv1alpha2 "sigs.k8s.io/cluster-api/api/v1alpha2"
 
-	"github.com/giantswarm/aws-operator/client/aws"
-	"github.com/giantswarm/aws-operator/flag"
-	"github.com/giantswarm/aws-operator/pkg/project"
-	"github.com/giantswarm/aws-operator/service/collector"
-	"github.com/giantswarm/aws-operator/service/controller"
-	"github.com/giantswarm/aws-operator/service/controller/resource/tccp"
-	"github.com/giantswarm/aws-operator/service/internal/hamaster"
-	"github.com/giantswarm/aws-operator/service/internal/images"
-	"github.com/giantswarm/aws-operator/service/internal/locker"
-	"github.com/giantswarm/aws-operator/service/internal/recorder"
+	"github.com/giantswarm/aws-collector/client/aws"
+	"github.com/giantswarm/aws-collector/flag"
+	"github.com/giantswarm/aws-collector/pkg/project"
+	"github.com/giantswarm/aws-collector/service/collector"
 )
 
 // Config represents the configuration used to create a new service.
@@ -45,13 +34,8 @@ type Config struct {
 type Service struct {
 	Version *version.Service
 
-	bootOnce                           sync.Once
-	clusterController                  *controller.Cluster
-	controlPlaneController             *controller.ControlPlane
-	controlPlaneDrainerController      *controller.ControlPlaneDrainer
-	machineDeploymentController        *controller.MachineDeployment
-	machineDeploymentDrainerController *controller.MachineDeploymentDrainer
-	operatorCollector                  *collector.Set
+	bootOnce          sync.Once
+	operatorCollector *collector.Set
 }
 
 // New creates a new configured service object.
@@ -119,244 +103,6 @@ func New(config Config) (*Service, error) {
 		}
 	}
 
-	var certsSearcher *certs.Searcher
-	{
-		c := certs.Config{
-			K8sClient: k8sClient.K8sClient(),
-			Logger:    config.Logger,
-		}
-
-		certsSearcher, err = certs.NewSearcher(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var event recorder.Interface
-	{
-		c := recorder.Config{
-			K8sClient: k8sClient,
-
-			Component: fmt.Sprintf("%s-%s", project.Name(), project.Version()),
-		}
-
-		event = recorder.New(c)
-	}
-
-	var ha hamaster.Interface
-	{
-		c := hamaster.Config{
-			K8sClient: k8sClient,
-		}
-
-		ha, err = hamaster.New(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var im images.Interface
-	{
-		c := images.Config{
-			K8sClient: k8sClient,
-
-			RegistryDomain: config.Viper.GetString(config.Flag.Service.Registry.Domain),
-		}
-
-		im, err = images.New(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var kubeLockLocker locker.Interface
-	{
-		c := locker.KubeLockLockerConfig{
-			Logger:     config.Logger,
-			RestConfig: restConfig,
-		}
-
-		kubeLockLocker, err = locker.NewKubeLockLocker(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var ipamNetworkRange net.IPNet
-	{
-		_, ipnet, err := net.ParseCIDR(config.Viper.GetString(config.Flag.Service.Installation.Guest.IPAM.Network.CIDR))
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-		ipamNetworkRange = *ipnet
-	}
-
-	var randomKeysSearcher randomkeys.Interface
-	{
-		c := randomkeys.Config{
-			K8sClient: k8sClient.K8sClient(),
-			Logger:    config.Logger,
-		}
-
-		randomKeysSearcher, err = randomkeys.NewSearcher(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var clusterController *controller.Cluster
-	{
-		c := controller.ClusterConfig{
-			Event:     event,
-			K8sClient: k8sClient,
-			HAMaster:  ha,
-			Locker:    kubeLockLocker,
-			Logger:    config.Logger,
-
-			AccessLogsExpiration:  config.Viper.GetInt(config.Flag.Service.AWS.S3AccessLogsExpiration),
-			AdvancedMonitoringEC2: config.Viper.GetBool(config.Flag.Service.AWS.AdvancedMonitoringEC2),
-			APIWhitelist: tccp.ConfigAPIWhitelist{
-				Private: tccp.ConfigAPIWhitelistSecurityGroup{
-					Enabled:    config.Viper.GetBool(config.Flag.Service.Installation.Guest.Kubernetes.API.Security.Whitelist.Private.Enabled),
-					SubnetList: strings.Split(config.Viper.GetString(config.Flag.Service.Installation.Guest.Kubernetes.API.Security.Whitelist.Private.SubnetList), ","),
-				},
-				Public: tccp.ConfigAPIWhitelistSecurityGroup{
-					Enabled:    config.Viper.GetBool(config.Flag.Service.Installation.Guest.Kubernetes.API.Security.Whitelist.Public.Enabled),
-					SubnetList: strings.Split(config.Viper.GetString(config.Flag.Service.Installation.Guest.Kubernetes.API.Security.Whitelist.Public.SubnetList), ","),
-				},
-			},
-			CalicoCIDR:                 config.Viper.GetInt(config.Flag.Service.Cluster.Calico.CIDR),
-			CalicoSubnet:               config.Viper.GetString(config.Flag.Service.Cluster.Calico.Subnet),
-			DeleteLoggingBucket:        config.Viper.GetBool(config.Flag.Service.AWS.LoggingBucket.Delete),
-			GuestPrivateSubnetMaskBits: config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.PrivateSubnetMaskBits),
-			GuestPublicSubnetMaskBits:  config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.PublicSubnetMaskBits),
-			GuestSubnetMaskBits:        config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.SubnetMaskBits),
-			HostAWSConfig:              awsConfig,
-			IncludeTags:                config.Viper.GetBool(config.Flag.Service.AWS.IncludeTags),
-			InstallationName:           config.Viper.GetString(config.Flag.Service.Installation.Name),
-			IPAMNetworkRange:           ipamNetworkRange,
-			Route53Enabled:             config.Viper.GetBool(config.Flag.Service.AWS.Route53.Enabled),
-			RouteTables:                config.Viper.GetString(config.Flag.Service.AWS.RouteTables),
-		}
-
-		clusterController, err = controller.NewCluster(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var controlPlaneController *controller.ControlPlane
-	{
-		c := controller.ControlPlaneConfig{
-			CertsSearcher:      certsSearcher,
-			Event:              event,
-			HAMaster:           ha,
-			Images:             im,
-			K8sClient:          k8sClient,
-			Logger:             config.Logger,
-			RandomKeysSearcher: randomKeysSearcher,
-
-			CalicoCIDR:                config.Viper.GetInt(config.Flag.Service.Cluster.Calico.CIDR),
-			CalicoMTU:                 config.Viper.GetInt(config.Flag.Service.Cluster.Calico.MTU),
-			CalicoSubnet:              config.Viper.GetString(config.Flag.Service.Cluster.Calico.Subnet),
-			ClusterDomain:             config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.ClusterDomain),
-			ClusterIPRange:            config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.API.ClusterIPRange),
-			DockerDaemonCIDR:          config.Viper.GetString(config.Flag.Service.Cluster.Docker.Daemon.CIDR),
-			ExternalSNAT:              config.Viper.GetBool(config.Flag.Service.AWS.CNI.ExternalSNAT),
-			IgnitionPath:              config.Viper.GetString(config.Flag.Service.Guest.Ignition.Path),
-			ImagePullProgressDeadline: config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.Kubelet.ImagePullProgressDeadline),
-			InstallationName:          config.Viper.GetString(config.Flag.Service.Installation.Name),
-			NetworkSetupDockerImage:   config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.NetworkSetup.Docker.Image),
-			PodInfraContainerImage:    config.Viper.GetString(config.Flag.Service.AWS.PodInfraContainerImage),
-			Route53Enabled:            config.Viper.GetBool(config.Flag.Service.AWS.Route53.Enabled),
-			RegistryDomain:            config.Viper.GetString(config.Flag.Service.Registry.Domain),
-			RegistryMirrors:           config.Viper.GetStringSlice(config.Flag.Service.Registry.Mirrors),
-			SSHUserList:               config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.SSH.UserList),
-			SSOPublicKey:              config.Viper.GetString(config.Flag.Service.Guest.SSH.SSOPublicKey),
-
-			HostAWSConfig: awsConfig,
-		}
-
-		controlPlaneController, err = controller.NewControlPlane(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var controlPlaneDrainerController *controller.ControlPlaneDrainer
-	{
-		c := controller.ControlPlaneDrainerConfig{
-			Event:     event,
-			K8sClient: k8sClient,
-			Logger:    config.Logger,
-
-			HostAWSConfig: awsConfig,
-		}
-
-		controlPlaneDrainerController, err = controller.NewControlPlaneDrainer(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var machineDeploymentController *controller.MachineDeployment
-	{
-		c := controller.MachineDeploymentConfig{
-			CertsSearcher:      certsSearcher,
-			Event:              event,
-			HAMaster:           ha,
-			Images:             im,
-			K8sClient:          k8sClient,
-			Locker:             kubeLockLocker,
-			Logger:             config.Logger,
-			RandomKeysSearcher: randomKeysSearcher,
-
-			CalicoCIDR:                 config.Viper.GetInt(config.Flag.Service.Cluster.Calico.CIDR),
-			CalicoMTU:                  config.Viper.GetInt(config.Flag.Service.Cluster.Calico.MTU),
-			CalicoSubnet:               config.Viper.GetString(config.Flag.Service.Cluster.Calico.Subnet),
-			ClusterDomain:              config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.ClusterDomain),
-			ClusterIPRange:             config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.API.ClusterIPRange),
-			DockerDaemonCIDR:           config.Viper.GetString(config.Flag.Service.Cluster.Docker.Daemon.CIDR),
-			ExternalSNAT:               config.Viper.GetBool(config.Flag.Service.AWS.CNI.ExternalSNAT),
-			GuestPrivateSubnetMaskBits: config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.PrivateSubnetMaskBits),
-			GuestPublicSubnetMaskBits:  config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.PublicSubnetMaskBits),
-			GuestSubnetMaskBits:        config.Viper.GetInt(config.Flag.Service.Installation.Guest.IPAM.Network.SubnetMaskBits),
-			HostAWSConfig:              awsConfig,
-			IgnitionPath:               config.Viper.GetString(config.Flag.Service.Guest.Ignition.Path),
-			ImagePullProgressDeadline:  config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.Kubelet.ImagePullProgressDeadline),
-			InstallationName:           config.Viper.GetString(config.Flag.Service.Installation.Name),
-			IPAMNetworkRange:           ipamNetworkRange,
-			NetworkSetupDockerImage:    config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.NetworkSetup.Docker.Image),
-			PodInfraContainerImage:     config.Viper.GetString(config.Flag.Service.AWS.PodInfraContainerImage),
-			RegistryDomain:             config.Viper.GetString(config.Flag.Service.Registry.Domain),
-			RegistryMirrors:            config.Viper.GetStringSlice(config.Flag.Service.Registry.Mirrors),
-			RouteTables:                config.Viper.GetString(config.Flag.Service.AWS.RouteTables),
-			SSHUserList:                config.Viper.GetString(config.Flag.Service.Cluster.Kubernetes.SSH.UserList),
-			SSOPublicKey:               config.Viper.GetString(config.Flag.Service.Guest.SSH.SSOPublicKey),
-		}
-
-		machineDeploymentController, err = controller.NewMachineDeployment(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
-	var machineDeploymentDrainerController *controller.MachineDeploymentDrainer
-	{
-		c := controller.MachineDeploymentDrainerConfig{
-			Event:     event,
-			K8sClient: k8sClient,
-			Logger:    config.Logger,
-
-			HostAWSConfig: awsConfig,
-		}
-
-		machineDeploymentDrainerController, err = controller.NewMachineDeploymentDrainer(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
-
 	var operatorCollector *collector.Set
 	{
 		c := collector.SetConfig{
@@ -393,13 +139,8 @@ func New(config Config) (*Service, error) {
 	s := &Service{
 		Version: versionService,
 
-		bootOnce:                           sync.Once{},
-		clusterController:                  clusterController,
-		controlPlaneController:             controlPlaneController,
-		controlPlaneDrainerController:      controlPlaneDrainerController,
-		machineDeploymentController:        machineDeploymentController,
-		machineDeploymentDrainerController: machineDeploymentDrainerController,
-		operatorCollector:                  operatorCollector,
+		bootOnce:          sync.Once{},
+		operatorCollector: operatorCollector,
 	}
 
 	return s, nil
@@ -408,11 +149,5 @@ func New(config Config) (*Service, error) {
 func (s *Service) Boot(ctx context.Context) {
 	s.bootOnce.Do(func() {
 		go s.operatorCollector.Boot(ctx) // nolint: errcheck
-
-		go s.clusterController.Boot(ctx)
-		go s.controlPlaneController.Boot(ctx)
-		go s.controlPlaneDrainerController.Boot(ctx)
-		go s.machineDeploymentController.Boot(ctx)
-		go s.machineDeploymentDrainerController.Boot(ctx)
 	})
 }

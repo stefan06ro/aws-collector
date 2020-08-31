@@ -138,7 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add common labels to `aws-operator` pod.
+- Add common labels to `aws-collector` pod.
 
 ### Fixed
 
@@ -247,21 +247,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-[Unreleased]: https://github.com/giantswarm/aws-operator/compare/v8.8.0...HEAD
-[8.8.0]: https://github.com/giantswarm/aws-operator/compare/v8.7.6...v8.8.0
-[8.7.6]: https://github.com/giantswarm/aws-operator/compare/v8.7.5...v8.7.6
-[8.7.5]: https://github.com/giantswarm/aws-operator/compare/v8.7.4...v8.7.5
-[8.7.4]: https://github.com/giantswarm/aws-operator/compare/v8.7.3...v8.7.4
-[8.7.3]: https://github.com/giantswarm/aws-operator/compare/v8.7.2...v8.7.3
-[8.7.2]: https://github.com/giantswarm/aws-operator/compare/v8.7.1...v8.7.2
-[8.7.1]: https://github.com/giantswarm/aws-operator/compare/v8.7.0...v8.7.1
-[8.7.0]: https://github.com/giantswarm/aws-operator/compare/v8.6.1...v8.7.0
-[8.6.1]: https://github.com/giantswarm/aws-operator/compare/v8.6.0...v8.6.1
-[8.6.0]: https://github.com/giantswarm/aws-operator/compare/v8.5.0...v8.6.0
-[8.5.0]: https://github.com/giantswarm/aws-operator/compare/v8.4.0...v8.5.0
-[8.4.0]: https://github.com/giantswarm/aws-operator/compare/v8.3.0...v8.4.0
-[8.3.0]: https://github.com/giantswarm/aws-operator/compare/v8.2.3...v8.3.0
-[8.2.3]: https://github.com/giantswarm/aws-operator/compare/v8.2.2...v8.2.3
-[8.2.2]: https://github.com/giantswarm/aws-operator/compare/v8.2.1...v8.2.2
+[Unreleased]: https://github.com/giantswarm/aws-collector/compare/v8.8.0...HEAD
+[8.8.0]: https://github.com/giantswarm/aws-collector/compare/v8.7.6...v8.8.0
+[8.7.6]: https://github.com/giantswarm/aws-collector/compare/v8.7.5...v8.7.6
+[8.7.5]: https://github.com/giantswarm/aws-collector/compare/v8.7.4...v8.7.5
+[8.7.4]: https://github.com/giantswarm/aws-collector/compare/v8.7.3...v8.7.4
+[8.7.3]: https://github.com/giantswarm/aws-collector/compare/v8.7.2...v8.7.3
+[8.7.2]: https://github.com/giantswarm/aws-collector/compare/v8.7.1...v8.7.2
+[8.7.1]: https://github.com/giantswarm/aws-collector/compare/v8.7.0...v8.7.1
+[8.7.0]: https://github.com/giantswarm/aws-collector/compare/v8.6.1...v8.7.0
+[8.6.1]: https://github.com/giantswarm/aws-collector/compare/v8.6.0...v8.6.1
+[8.6.0]: https://github.com/giantswarm/aws-collector/compare/v8.5.0...v8.6.0
+[8.5.0]: https://github.com/giantswarm/aws-collector/compare/v8.4.0...v8.5.0
+[8.4.0]: https://github.com/giantswarm/aws-collector/compare/v8.3.0...v8.4.0
+[8.3.0]: https://github.com/giantswarm/aws-collector/compare/v8.2.3...v8.3.0
+[8.2.3]: https://github.com/giantswarm/aws-collector/compare/v8.2.2...v8.2.3
+[8.2.2]: https://github.com/giantswarm/aws-collector/compare/v8.2.1...v8.2.2
 
-[8.2.1]: https://github.com/giantswarm/aws-operator/releases/tag/v8.2.1
+[8.2.1]: https://github.com/giantswarm/aws-collector/releases/tag/v8.2.1

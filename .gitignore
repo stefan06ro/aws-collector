@@ -1,6 +1,6 @@
 *.swp
-aws-operator
-!helm/aws-operator
+aws-collector
+!helm/aws-collector
 TODO
 *.swp
 !vendor/**

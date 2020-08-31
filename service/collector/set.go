@@ -6,7 +6,7 @@ import (
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 
-	clientaws "github.com/giantswarm/aws-operator/client/aws"
+	clientaws "github.com/giantswarm/aws-collector/client/aws"
 )
 
 type SetConfig struct {

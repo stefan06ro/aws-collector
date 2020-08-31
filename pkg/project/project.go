@@ -1,10 +1,10 @@
 package project
 
 var (
-	description        = "The aws-operator manages Kubernetes clusters running on AWS."
+	description        = "The aws-collector manages Kubernetes clusters running on AWS."
 	gitSHA             = "n/a"
-	name        string = "aws-operator"
-	source      string = "https://github.com/giantswarm/aws-operator"
+	name        string = "aws-collector"
+	source      string = "https://github.com/giantswarm/aws-collector"
 	version            = "8.8.1-dev"
 )
 

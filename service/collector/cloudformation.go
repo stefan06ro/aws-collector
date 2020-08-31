@@ -9,8 +9,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/sync/errgroup"
 
-	clientaws "github.com/giantswarm/aws-operator/client/aws"
-	"github.com/giantswarm/aws-operator/service/controller/key"
+	clientaws "github.com/giantswarm/aws-collector/client/aws"
+	"github.com/giantswarm/aws-collector/service/controller/key"
 )
 
 const (

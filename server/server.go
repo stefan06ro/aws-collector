@@ -12,9 +12,9 @@ import (
 	"github.com/giantswarm/micrologger"
 	"github.com/spf13/viper"
 
-	"github.com/giantswarm/aws-operator/pkg/project"
-	"github.com/giantswarm/aws-operator/server/endpoint"
-	"github.com/giantswarm/aws-operator/service"
+	"github.com/giantswarm/aws-collector/pkg/project"
+	"github.com/giantswarm/aws-collector/server/endpoint"
+	"github.com/giantswarm/aws-collector/service"
 )
 
 type Config struct {

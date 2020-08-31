@@ -10,11 +10,11 @@ import (
 	"github.com/giantswarm/micrologger"
 	runtimeclient "sigs.k8s.io/controller-runtime/pkg/client"
 
-	clientaws "github.com/giantswarm/aws-operator/client/aws"
-	"github.com/giantswarm/aws-operator/pkg/label"
-	"github.com/giantswarm/aws-operator/pkg/project"
-	"github.com/giantswarm/aws-operator/service/internal/accountid"
-	"github.com/giantswarm/aws-operator/service/internal/credential"
+	clientaws "github.com/giantswarm/aws-collector/client/aws"
+	"github.com/giantswarm/aws-collector/pkg/label"
+	"github.com/giantswarm/aws-collector/pkg/project"
+	"github.com/giantswarm/aws-collector/service/internal/accountid"
+	"github.com/giantswarm/aws-collector/service/internal/credential"
 )
 
 type helperConfig struct {

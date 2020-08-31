@@ -9,7 +9,7 @@
 # improved we can simplify the circle config again as modified in the pull
 # request linked below.
 #
-#     https://github.com/giantswarm/aws-operator/pull/2347
+#     https://github.com/giantswarm/aws-collector/pull/2347
 #
 version: 2.1
 
@@ -21,7 +21,7 @@ workflows:
     jobs:
       - architect/go-build:
           name: go-build
-          binary: aws-operator
+          binary: aws-collector
           resource_class: xlarge
           filters:
             tags:
@@ -31,7 +31,7 @@ workflows:
       # an image is pushed to Quay.
       - architect/push-to-docker:
           name: push-to-quay
-          image: "quay.io/giantswarm/aws-operator"
+          image: "quay.io/giantswarm/aws-collector"
           username_envar: "QUAY_USERNAME"
           password_envar: "QUAY_PASSWORD"
           requires:
@@ -44,7 +44,7 @@ workflows:
       # an image gets pushed to the Aliyun registry.
       - architect/push-to-docker:
           name: push-to-aliyun
-          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/aws-operator"
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/aws-collector"
           username_envar: "ALIYUN_USERNAME"
           password_envar: "ALIYUN_PASSWORD"
           requires:
@@ -70,7 +70,7 @@ workflows:
               ignore: /^v.*/
       - architect/push-to-docker:
           name: push-to-aliyun-pr
-          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/aws-operator"
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/aws-collector"
           username_envar: "ALIYUN_USERNAME"
           password_envar: "ALIYUN_PASSWORD"
           requires:
@@ -87,7 +87,7 @@ workflows:
           name: push-to-app-catalog-master
           app_catalog: "control-plane-catalog"
           app_catalog_test: "control-plane-test-catalog"
-          chart: "aws-operator"
+          chart: "aws-collector"
           requires:
             - push-to-aliyun
             - push-to-quay
@@ -105,7 +105,7 @@ workflows:
           name: push-to-app-catalog-pr
           app_catalog: "control-plane-catalog"
           app_catalog_test: "control-plane-test-catalog"
-          chart: "aws-operator"
+          chart: "aws-collector"
           requires:
             - push-to-quay
           filters:

@@ -10,7 +10,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/giantswarm/aws-operator/client/aws"
+	"github.com/giantswarm/aws-collector/client/aws"
 )
 
 const (

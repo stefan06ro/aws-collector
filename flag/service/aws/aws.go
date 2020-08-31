@@ -1,11 +1,11 @@
 package aws
 
 import (
-	"github.com/giantswarm/aws-operator/flag/service/aws/cni"
-	"github.com/giantswarm/aws-operator/flag/service/aws/hostaccesskey"
-	"github.com/giantswarm/aws-operator/flag/service/aws/loggingbucket"
-	"github.com/giantswarm/aws-operator/flag/service/aws/route53"
-	"github.com/giantswarm/aws-operator/flag/service/aws/trustedadvisor"
+	"github.com/giantswarm/aws-collector/flag/service/aws/cni"
+	"github.com/giantswarm/aws-collector/flag/service/aws/hostaccesskey"
+	"github.com/giantswarm/aws-collector/flag/service/aws/loggingbucket"
+	"github.com/giantswarm/aws-collector/flag/service/aws/route53"
+	"github.com/giantswarm/aws-collector/flag/service/aws/trustedadvisor"
 )
 
 type AWS struct {
