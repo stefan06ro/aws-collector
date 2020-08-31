@@ -1,0 +1,9 @@
+*.swp
+aws-operator
+!helm/aws-operator
+TODO
+*.swp
+!vendor/**
+
+.e2e-harness
+integration/test/**/*-e2e
