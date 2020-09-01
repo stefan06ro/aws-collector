@@ -19,9 +19,9 @@ require (
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.15.0 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
-	k8s.io/api v0.18.5
-	k8s.io/apimachinery v0.18.5
-	k8s.io/client-go v0.18.5
+	k8s.io/api v0.18.6
+	k8s.io/apimachinery v0.18.6
+	k8s.io/client-go v0.18.6
 	sigs.k8s.io/cluster-api v0.3.8
-	sigs.k8s.io/controller-runtime v0.6.1
+	sigs.k8s.io/controller-runtime v0.6.2
 )
