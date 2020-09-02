@@ -1,7 +1,7 @@
 package project
 
 var (
-	description        = "The aws-collector manages Kubernetes clusters running on AWS."
+	description        = "aws-collector is a prometheus exporter for AWS Control Planes"
 	gitSHA             = "n/a"
 	name        string = "aws-collector"
 	source      string = "https://github.com/giantswarm/aws-collector"
