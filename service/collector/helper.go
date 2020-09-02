@@ -8,11 +8,8 @@ import (
 	"github.com/giantswarm/k8sclient/v4/pkg/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
-	runtimeclient "sigs.k8s.io/controller-runtime/pkg/client"
 
 	clientaws "github.com/giantswarm/aws-collector/client/aws"
-	"github.com/giantswarm/aws-collector/pkg/label"
-	"github.com/giantswarm/aws-collector/pkg/project"
 	"github.com/giantswarm/aws-collector/service/internal/accountid"
 	"github.com/giantswarm/aws-collector/service/internal/credential"
 )
@@ -185,9 +182,6 @@ func (h *helper) ListReconciledClusters() (*infrastructurev1alpha2.AWSClusterLis
 	err := h.clients.CtrlClient().List(
 		ctx,
 		clusters,
-		runtimeclient.MatchingLabels{
-			label.OperatorVersion: project.Version(),
-		},
 	)
 	if err != nil {
 		return nil, microerror.Mask(err)
