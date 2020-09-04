@@ -173,8 +173,7 @@ func (h *helper) AWSAccountID(awsClients clientaws.Clients) (string, error) {
 	return accountID, nil
 }
 
-// ListReconciledClusters provides a list of clusters reconciled by this
-// particular operator version.
+// ListReconciledClusters provides a list of clusters
 func (h *helper) ListReconciledClusters() (*infrastructurev1alpha2.AWSClusterList, error) {
 	ctx := context.Background()
 

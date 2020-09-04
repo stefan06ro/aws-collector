@@ -18,7 +18,7 @@ type SetConfig struct {
 	TrustedAdvisorEnabled bool
 }
 
-// Set is basically only a wrapper for the operator's collector implementations.
+// Set is basically only a wrapper for the collector implementations.
 // It eases the initialization and prevents some weird import mess so we do not
 // have to alias packages. There is also the benefit of the helper type kept
 // private so we do not need to expose this magic.
