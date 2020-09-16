@@ -10,9 +10,8 @@ require (
 	github.com/giantswarm/microendpoint v0.2.0
 	github.com/giantswarm/microerror v0.2.1
 	github.com/giantswarm/microkit v0.2.2
-	github.com/giantswarm/micrologger v0.3.1
+	github.com/giantswarm/micrologger v0.3.3
 	github.com/giantswarm/operatorkit/v2 v2.0.0
-	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.7.1
 	github.com/spf13/afero v1.3.1 // indirect
