@@ -13,7 +13,7 @@ require (
 	github.com/giantswarm/micrologger v0.4.0
 	github.com/giantswarm/operatorkit/v2 v2.0.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/prometheus/client_golang v1.8.0
+	github.com/prometheus/client_golang v1.9.0
 	github.com/spf13/afero v1.3.1 // indirect
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.15.0 // indirect
