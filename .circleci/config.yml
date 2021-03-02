@@ -14,7 +14,7 @@
 version: 2.1
 
 orbs:
-  architect: giantswarm/architect@0.10.2
+  architect: giantswarm/architect@2.1.0
 
 workflows:
   build:
@@ -123,7 +123,6 @@ workflows:
           context: architect
           app_name: "aws-collector"
           app_collection_repo: "aws-app-collection"
-          unique: "true"
           requires:
             - push-to-app-catalog-master
           filters:
