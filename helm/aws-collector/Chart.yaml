@@ -4,3 +4,5 @@ description: The aws-collector manages Kubernetes clusters running on AWS.
 home: https://github.com/giantswarm/aws-collector
 version: [[ .Version ]]
 appVersion: [[ .AppVersion ]]
+annotations:
+  application.giantswarm.io/team: "firecracker"
