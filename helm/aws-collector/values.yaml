@@ -1,10 +1,6 @@
 image:
   name: "giantswarm/aws-collector"
   tag: "[[ .Version ]]"
-Installation:
-  V1:
-    Registry:
-      Domain: docker.io
 pod:
   user:
     id: 1000
@@ -18,3 +14,17 @@ ports:
 project:
   branch: "[[ .Branch ]]"
   commit: "[[ .SHA ]]"
+
+managementCluster:
+  name: ""
+
+aws:
+  region: ""
+  accessKeyID: ""
+  secretAccessKey: ""
+
+trustedAdvisor:
+  enabled: false
+
+registry:
+  domain: docker.io
