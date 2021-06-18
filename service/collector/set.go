@@ -148,6 +148,21 @@ func NewSet(config SetConfig) (*Set, error) {
 		}
 	}
 
+	var subnetCollector *Subnet
+	{
+		c := SubnetConfig{
+			Helper: h,
+			Logger: config.Logger,
+
+			InstallationName: config.InstallationName,
+		}
+
+		subnetCollector, err = NewSubnet(c)
+		if err != nil {
+			return nil, microerror.Mask(err)
+		}
+	}
+
 	var vpcCollector *VPC
 	{
 		c := VPCConfig{
@@ -173,6 +188,7 @@ func NewSet(config SetConfig) (*Set, error) {
 				elbCollector,
 				sqCollector,
 				natCollector,
+				subnetCollector,
 				vpcCollector,
 			},
 			Logger: config.Logger,
