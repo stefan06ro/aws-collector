@@ -13,7 +13,7 @@ require (
 	github.com/giantswarm/micrologger v0.5.0
 	github.com/giantswarm/operatorkit/v2 v2.0.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
-	github.com/prometheus/client_golang v1.10.0
+	github.com/prometheus/client_golang v1.11.0
 	github.com/spf13/viper v1.8.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	k8s.io/api v0.18.19
