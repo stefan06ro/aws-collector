@@ -14,10 +14,8 @@ require (
 	github.com/giantswarm/operatorkit/v2 v2.0.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.10.0
-	github.com/spf13/afero v1.3.1 // indirect
-	github.com/spf13/viper v1.7.1
-	go.uber.org/zap v1.15.0 // indirect
-	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
+	github.com/spf13/viper v1.8.0
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	k8s.io/api v0.18.19
 	k8s.io/apimachinery v0.18.19
 	k8s.io/client-go v0.18.19
