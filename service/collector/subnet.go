@@ -23,6 +23,7 @@ const (
 
 const (
 	subsystemSubnet = "subnet"
+	labelSubnetType = "subnet_type"
 )
 
 var (
@@ -37,6 +38,7 @@ var (
 			labelInstallation,
 			labelOrganization,
 			labelStack,
+			labelSubnetType,
 			labelState,
 			labelAvailabilityZone,
 			labelAccount,
@@ -214,6 +216,7 @@ func (e *Subnet) collectForAccount(ctx context.Context, ch chan<- prometheus.Met
 				e.installationName,
 				subnet.Tags[key.TagOrganization],
 				subnet.Tags[key.TagStack],
+				subnet.Tags[key.TagSubnetType],
 				subnet.Tags["State"],
 				subnet.Tags["AvailabilityZone"],
 				subnet.Tags["OwnerId"],
