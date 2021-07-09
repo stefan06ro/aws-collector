@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add metrics for percentage of available IPs left in a subnet.
+- Add metrics for batch size and wait times for upgrades of node pools.
+
 ## [1.3.0] - 2021-07-01
 
 ### Added

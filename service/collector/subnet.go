@@ -3,6 +3,9 @@ package collector
 import (
 	"context"
 	"encoding/json"
+	"math"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -29,7 +32,26 @@ const (
 var (
 	subnetsDesc *prometheus.Desc = prometheus.NewDesc(
 		prometheus.BuildFQName(namespace, subsystemSubnet, "available_ips"),
-		"Subnet information.",
+		"Number of still available IPs for each subnet.",
+		[]string{
+			labelAccountID,
+			labelCIDR,
+			labelCluster,
+			labelID,
+			labelInstallation,
+			labelOrganization,
+			labelStack,
+			labelSubnetType,
+			labelState,
+			labelAvailabilityZone,
+			labelAccount,
+			labelVPC,
+		},
+		nil,
+	)
+	subnetsPercentageDesc *prometheus.Desc = prometheus.NewDesc(
+		prometheus.BuildFQName(namespace, subsystemSubnet, "available_ips_percentage"),
+		"Percentage of still available IPs for each subnet.",
 		[]string{
 			labelAccountID,
 			labelCIDR,
@@ -72,9 +94,10 @@ type subnetInfoResponse struct {
 }
 
 type subnetInfo struct {
-	Name         string
-	AvailableIPs int64
-	Tags         map[string]string
+	Name                  string
+	AvailableIPs          int64
+	AvailableIPPercentage float64
+	Tags                  map[string]string
 }
 
 func NewSubnet(config SubnetConfig) (*Subnet, error) {
@@ -172,6 +195,7 @@ func (e *Subnet) Collect(ch chan<- prometheus.Metric) error {
 
 func (e *Subnet) Describe(ch chan<- *prometheus.Desc) error {
 	ch <- subnetsDesc
+	ch <- subnetsPercentageDesc
 	return nil
 }
 
@@ -222,6 +246,24 @@ func (e *Subnet) collectForAccount(ctx context.Context, ch chan<- prometheus.Met
 				subnet.Tags["OwnerId"],
 				subnet.Tags["VpcId"],
 			)
+
+			ch <- prometheus.MustNewConstMetric(
+				subnetsPercentageDesc,
+				prometheus.GaugeValue,
+				subnet.AvailableIPPercentage,
+				account,
+				subnet.Tags["CidrBlock"],
+				subnet.Tags[key.TagCluster],
+				subnet.Name,
+				e.installationName,
+				subnet.Tags[key.TagOrganization],
+				subnet.Tags[key.TagStack],
+				subnet.Tags[key.TagSubnetType],
+				subnet.Tags["State"],
+				subnet.Tags["AvailabilityZone"],
+				subnet.Tags["OwnerId"],
+				subnet.Tags["VpcId"],
+			)
 		}
 	}
 
@@ -256,8 +298,26 @@ func (e *Subnet) getSubnetInfoFromAPI(ctx context.Context, awsClients clientaws.
 		if subnet.Tags[key.TagInstallation] != e.installationName {
 			continue
 		}
+		subnet.AvailableIPPercentage, err = getAvailableIPPercentage(subnet.Tags["CidrBlock"], subnet.AvailableIPs)
+		if err != nil {
+			return nil, microerror.Mask(err)
+		}
 		subnets = append(subnets, subnet)
 	}
 	res.Subnets = subnets
 	return &res, nil
+}
+
+func getAvailableIPPercentage(cidr string, availableIps int64) (float64, error) {
+	parts := strings.Split(cidr, "/")
+	if len(parts) != 2 {
+		return 0, microerror.Maskf(parsingFailedError, "Can not parse CIDR.")
+	}
+	if n, err := strconv.Atoi(parts[1]); err == nil {
+		// The number of IPs in the network are calculated as 2^(32-netmask). From there we substract 5 IPs that are always used by AWS
+		totalIPs := math.Pow(2, float64(32-n)) - 5
+		return float64(availableIps) / totalIPs, nil
+	} else {
+		return 0, microerror.Mask(err)
+	}
 }

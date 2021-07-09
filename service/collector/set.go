@@ -163,6 +163,19 @@ func NewSet(config SetConfig) (*Set, error) {
 		}
 	}
 
+	var updateCollector *Update
+	{
+		c := UpdateConfig{
+			Helper: h,
+			Logger: config.Logger,
+		}
+
+		updateCollector, err = NewUpdate(c)
+		if err != nil {
+			return nil, microerror.Mask(err)
+		}
+	}
+
 	var vpcCollector *VPC
 	{
 		c := VPCConfig{
@@ -189,6 +202,7 @@ func NewSet(config SetConfig) (*Set, error) {
 				sqCollector,
 				natCollector,
 				subnetCollector,
+				updateCollector,
 				vpcCollector,
 			},
 			Logger: config.Logger,

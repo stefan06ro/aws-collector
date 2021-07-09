@@ -53,6 +53,24 @@ func IsNilUsage(err error) bool {
 	return microerror.Cause(err) == nilUsageError
 }
 
+var notFoundError = &microerror.Error{
+	Kind: "notFoundError",
+}
+
+// IsNotFound asserts notFoundError.
+func IsNotFound(err error) bool {
+	return microerror.Cause(err) == notFoundError
+}
+
+var parsingFailedError = &microerror.Error{
+	Kind: "parsingFailedError",
+}
+
+// IsparsingFailed asserts parsingFailedError.
+func IsParsingFailed(err error) bool {
+	return microerror.Cause(err) == parsingFailedError
+}
+
 // IsUnsupportedPlan asserts that an error is due to Trusted Advisor not being
 // available with the current support plan.
 func IsUnsupportedPlan(err error) bool {
