@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	infrastructurev1alpha2 "github.com/giantswarm/apiextensions/v2/pkg/apis/infrastructure/v1alpha2"
-	"github.com/giantswarm/k8sclient/v4/pkg/k8sclient"
+	infrastructurev1alpha3 "github.com/giantswarm/apiextensions/v3/pkg/apis/infrastructure/v1alpha3"
+	"github.com/giantswarm/k8sclient/v5/pkg/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 
@@ -52,7 +52,7 @@ func newHelper(config helperConfig) (*helper, error) {
 }
 
 // GetARNs list all unique aws IAM ARN from credential secret.
-func (h *helper) GetARNs(ctx context.Context, clusterList *infrastructurev1alpha2.AWSClusterList) ([]string, error) {
+func (h *helper) GetARNs(ctx context.Context, clusterList *infrastructurev1alpha3.AWSClusterList) ([]string, error) {
 	var arns []string
 
 	// Get unique ARNs.
@@ -88,7 +88,7 @@ func (h *helper) GetARNs(ctx context.Context, clusterList *infrastructurev1alpha
 
 // GetAWSClients return a list of aws clients for every guest cluster account plus
 // the host cluster account.
-func (h *helper) GetAWSClients(ctx context.Context, clusterList *infrastructurev1alpha2.AWSClusterList) ([]clientaws.Clients, error) {
+func (h *helper) GetAWSClients(ctx context.Context, clusterList *infrastructurev1alpha3.AWSClusterList) ([]clientaws.Clients, error) {
 	var (
 		clients    []clientaws.Clients
 		clientsMap = make(map[string]clientaws.Clients)
@@ -174,10 +174,10 @@ func (h *helper) AWSAccountID(awsClients clientaws.Clients) (string, error) {
 }
 
 // ListReconciledClusters provides a list of clusters
-func (h *helper) ListReconciledClusters() (*infrastructurev1alpha2.AWSClusterList, error) {
+func (h *helper) ListReconciledClusters() (*infrastructurev1alpha3.AWSClusterList, error) {
 	ctx := context.Background()
 
-	clusters := &infrastructurev1alpha2.AWSClusterList{}
+	clusters := &infrastructurev1alpha3.AWSClusterList{}
 	err := h.clients.CtrlClient().List(
 		ctx,
 		clusters,

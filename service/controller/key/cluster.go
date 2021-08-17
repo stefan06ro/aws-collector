@@ -1,7 +1,7 @@
 package key
 
 import (
-	infrastructurev1alpha2 "github.com/giantswarm/apiextensions/v2/pkg/apis/infrastructure/v1alpha2"
+	infrastructurev1alpha3 "github.com/giantswarm/apiextensions/v3/pkg/apis/infrastructure/v1alpha3"
 )
 
 const (
@@ -77,10 +77,10 @@ const (
 	ComponentOS = "containerlinux"
 )
 
-func CredentialName(cluster infrastructurev1alpha2.AWSCluster) string {
+func CredentialName(cluster infrastructurev1alpha3.AWSCluster) string {
 	return cluster.Spec.Provider.CredentialSecret.Name
 }
 
-func CredentialNamespace(cluster infrastructurev1alpha2.AWSCluster) string {
+func CredentialNamespace(cluster infrastructurev1alpha3.AWSCluster) string {
 	return cluster.Spec.Provider.CredentialSecret.Namespace
 }

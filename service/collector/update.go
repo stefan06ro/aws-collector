@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	infrastructurev1alpha2 "github.com/giantswarm/apiextensions/v2/pkg/apis/infrastructure/v1alpha2"
+	infrastructurev1alpha3 "github.com/giantswarm/apiextensions/v3/pkg/apis/infrastructure/v1alpha3"
 	"github.com/giantswarm/k8smetadata/pkg/annotation"
 	"github.com/giantswarm/k8smetadata/pkg/label"
 	"github.com/giantswarm/microerror"
@@ -94,7 +94,7 @@ func NewUpdate(config UpdateConfig) (*Update, error) {
 func (np *Update) Collect(ch chan<- prometheus.Metric) error {
 	ctx := context.Background()
 
-	var list infrastructurev1alpha2.AWSMachineDeploymentList
+	var list infrastructurev1alpha3.AWSMachineDeploymentList
 	{
 		err := np.helper.clients.CtrlClient().List(
 			ctx,
@@ -163,7 +163,7 @@ func (np *Update) Describe(ch chan<- *prometheus.Desc) error {
 	return nil
 }
 
-func (np *Update) getUpdateAnnotations(md infrastructurev1alpha2.AWSMachineDeployment) (string, string, error) {
+func (np *Update) getUpdateAnnotations(md infrastructurev1alpha3.AWSMachineDeployment) (string, string, error) {
 	var batch, time string
 
 	// get info from AWSMachineDeployment
@@ -176,9 +176,9 @@ func (np *Update) getUpdateAnnotations(md infrastructurev1alpha2.AWSMachineDeplo
 	}
 
 	// get info from AWSCluster
-	var cl infrastructurev1alpha2.AWSCluster
+	var cl infrastructurev1alpha3.AWSCluster
 	{
-		var clusterList infrastructurev1alpha2.AWSClusterList
+		var clusterList infrastructurev1alpha3.AWSClusterList
 		err := np.helper.clients.CtrlClient().List(
 			context.Background(),
 			&clusterList,
