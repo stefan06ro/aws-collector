@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2021-08-17
+
 ### Changed
 
 - Reconcile `v1alpha3` CR's.
@@ -44,7 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Project copied from [aws-operator](https://github.com/giantswarm/aws-operator)
 
-[Unreleased]: https://github.com/giantswarm/aws-collector/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/giantswarm/aws-collector/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/giantswarm/aws-collector/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/giantswarm/aws-collector/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/giantswarm/aws-collector/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/giantswarm/aws-collector/compare/v1.1.0...v1.2.0
