@@ -3,7 +3,7 @@ module github.com/giantswarm/aws-collector
 go 1.14
 
 require (
-	github.com/aws/aws-sdk-go v1.40.22
+	github.com/aws/aws-sdk-go v1.41.6
 	github.com/giantswarm/apiextensions/v3 v3.34.0
 	github.com/giantswarm/exporterkit v0.2.1
 	github.com/giantswarm/k8sclient/v5 v5.12.0
@@ -16,7 +16,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/prometheus/client_golang v1.11.0
 	github.com/senseyeio/duration v0.0.0-20180430131211-7c2a214ada46
-	github.com/spf13/viper v1.8.1
+	github.com/spf13/viper v1.9.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	k8s.io/api v0.18.19
 	k8s.io/apimachinery v0.18.19
