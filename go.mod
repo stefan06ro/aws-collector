@@ -18,11 +18,11 @@ require (
 	github.com/senseyeio/duration v0.0.0-20180430131211-7c2a214ada46
 	github.com/spf13/viper v1.8.1
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	k8s.io/api v0.18.19
-	k8s.io/apimachinery v0.18.19
-	k8s.io/client-go v0.18.19
-	sigs.k8s.io/cluster-api v0.4.1
-	sigs.k8s.io/controller-runtime v0.6.4
+	k8s.io/api v0.20.11
+	k8s.io/apimachinery v0.20.11
+	k8s.io/client-go v0.20.11
+	sigs.k8s.io/cluster-api v0.4.4
+	sigs.k8s.io/controller-runtime v0.6.5
 )
 
 replace (
