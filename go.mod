@@ -4,10 +4,10 @@ go 1.14
 
 require (
 	github.com/aws/aws-sdk-go v1.40.22
-	github.com/giantswarm/apiextensions/v3 v3.32.0
+	github.com/giantswarm/apiextensions/v3 v3.34.0
 	github.com/giantswarm/exporterkit v0.2.1
 	github.com/giantswarm/k8sclient/v5 v5.12.0
-	github.com/giantswarm/k8smetadata v0.3.0
+	github.com/giantswarm/k8smetadata v0.4.0
 	github.com/giantswarm/microendpoint v0.2.0
 	github.com/giantswarm/microerror v0.3.0
 	github.com/giantswarm/microkit v0.2.2
@@ -17,7 +17,6 @@ require (
 	github.com/prometheus/client_golang v1.11.0
 	github.com/senseyeio/duration v0.0.0-20180430131211-7c2a214ada46
 	github.com/spf13/viper v1.8.1
-	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	k8s.io/api v0.18.19
 	k8s.io/apimachinery v0.18.19
